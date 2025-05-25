@@ -1,0 +1,547 @@
+<!doctype html>
+<html lang="pt">
+<head>
+    <meta charset="utf-8">
+    <title>Atuação do Biomédico no Diagnóstico por Imagem</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/dist/reveal.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js/dist/theme/black.css" id="theme">
+
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap">
+
+    <style>
+        /* Estilos Gerais para o corpo e canvas de fundo */
+        body {
+            margin: 0;
+            overflow: hidden; /* O Reveal.js controla o scroll */
+            background-color: #0a0a23; /* Cor de fundo escura mantida */
+            font-family: 'Inter', sans-serif; /* Aplica a fonte Inter mantida */
+            color: #eee; /* Cor do texto padrão mantida */
+        }
+
+        /* Canvas da Malha Sináptica (Fundo fixo) */
+        #synapseCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            display: block;
+            z-index: -1; /* Fica abaixo de todo o conteúdo do Reveal.js */
+            opacity: 0.7; /* Opacidade ajustada mantida */
+            pointer-events: none; /* Garante que o mouse interaja com a apresentação, não com o canvas */
+        }
+
+        /* Estilos para o conteúdo da apresentação */
+        .reveal {
+            font-family: 'Inter', sans-serif; /* Garante a fonte na apresentação */
+            color: #eee; /* Cor do texto mantida */
+            font-size: 16px; /* Define um tamanho base para facilitar cálculos com 'em' */
+        }
+
+        .reveal .slides {
+            text-align: left; /* Alinha o texto à esquerda por padrão */
+            padding: 0 5%; /* Adiciona um padding horizontal */
+        }
+
+         /* AJUSTE FINO: Tamanhos dos Títulos - Maiores e Uniformizados (aprox. 25.6px) */
+        .reveal h1,
+        .reveal h2,
+        .reveal h3,
+        .reveal h4,
+        .reveal h5,
+        .reveal h6,
+        .reveal section.topic h2 {
+            font-family: 'Inter', sans-serif;
+            text-shadow: none;
+            color: #00ffff; /* COR AZUL para todos os títulos (Ciano) */
+            font-weight: 600; /* Semi-bold mantido */
+            margin-bottom: 18px; /* Ajusta margem */
+            font-size: 1.6em; /* Aproximadamente 25.6px (1.6 * 16) */
+        }
+
+         /* AJUSTE: Título principal na primeira slide - Maior que os outros */
+         .reveal section:first-child h2 {
+             font-size: 2.4em; /* Aproximadamente 38.4px (2.4 * 16) */
+             margin-bottom: 10px; /* Ajusta margem */
+              color: #00ffff; /* Mantém a cor azul */
+         }
+          /* AJUSTE: Subtítulo na primeira slide - Tamanho intermediário */
+          .reveal section:first-child h4 {
+              font-size: 1.3em; /* Aproximadamente 20.8px (1.3 * 16) */
+               margin-top: 0;
+                color: #aaa; /* Cor cinza mantida */
+                font-weight: 400; /* Regular mantido */
+          }
+         /* AJUSTE: Título de tópico volta a ser azul */
+         .reveal section.topic h2 {
+             color: #00ffff; /* Garante que seja azul, igual aos outros títulos */
+         }
+
+
+        /* AJUSTE FINO: Corpo do Texto (Parágrafos e Itens de Lista) - Maiores e Uniformizados (aprox. 18px) */
+        .reveal p,
+        .reveal ul li {
+            font-size: 1.125em; /* Aproximadamente 18px (1.125 * 16) */
+            line-height: 1.5; /* Ajusta line-height */
+            margin-bottom: 10px; /* Ajusta margem */
+            color: #ddd; /* Cor mantida */
+            font-weight: 300; /* Light mantido */
+        }
+
+        .reveal ul {
+             font-size: 1.125em; /* Base da lista */
+            line-height: 1.5;
+            margin: 18px 0; /* Ajusta margem */
+            padding-left: 1.5em; /* Ajusta espaçamento da lista */
+        }
+
+        .reveal strong {
+            color: #fff; /* Destaca texto em negrito mantido */
+            font-weight: 600;
+        }
+
+        /* Estilos específicos do tema black */
+        .reveal .controls { border-color: #00ffff; } /* Cor mantida */
+        .reveal .progress { background-color: #00ffff; } /* Cor mantida */
+
+
+         /* Estilos para slides específicos ou elementos customizados */
+         .reveal .slide-number {
+             color: #aaa; /* Cor mantida */
+             font-size: 0.6em; /* Mantido */
+         }
+
+         /* Estilo para o bloco de citação - Ajustes para o novo tamanho base */
+         .reveal blockquote {
+            margin: 35px auto; /* Ajusta margem */
+            font-style: italic; /* Mantido */
+            color: #00ccff; /* Cor mantida */
+            max-width: 85%; /* Mantido */
+            padding: 12px 25px; /* Ajusta padding */
+            border-left: 5px solid #00aaff; /* Mantido */
+            background-color: rgba(0, 170, 255, 0.05); /* Mantido */
+         }
+          .reveal blockquote p {
+             font-size: 1.3em; /* Aproximadamente 20.8px (1.3 * 16) - maior que texto normal (18px) */
+             margin-bottom: 8px; /* Ajusta margem */
+             color: #00ccff; /* Cor mantida */
+             font-weight: 400; /* Mantido */
+         }
+
+         /* Estilo para a atribuição da citação - Ajuste para o novo tamanho base */
+         .reveal .quote-attribution {
+             text-align: center; /* Mantido */
+             font-size: 0.9em; /* Aproximadamente 14.4px (0.9 * 16) - ligeiramente menor que corpo */
+             color: #aaa; /* Cor mantida */
+             margin-top: 15px; /* Ajusta margem */
+             display: block; /* Mantido */
+         }
+
+         /* Estilo para contato final - Ajuste para o novo tamanho base */
+         .reveal .final-contact {
+             text-align: center; /* Mantido */
+             margin-top: 50px; /* Ajusta margem */
+             font-size: 1.2em; /* Aproximadamente 19.2px (1.2 * 16) - ligeiramente maior que corpo */
+             color: #ddd; /* Cor mantida */
+         }
+
+         /* Estilo para nota de rodapé final - Ajuste para o novo tamanho base */
+         .reveal .final-note {
+            font-size:0.8em; /* Aproximadamente 12.8px (0.8 * 16) - menor */
+            margin-top: 25px; /* Ajusta margem */
+            text-align: center; /* Mantido */
+            color: #666; /* Cor mantida */
+         }
+
+        /* Estilo para listas dentro de listas se houver */
+        .reveal ul ul {
+            margin-top: 10px; /* Ajusta margem */
+            margin-bottom: 10px; /* Ajusta margem */
+        }
+        .reveal ul ul li {
+            font-size: 1em; /* Mantém o tamanho relativo ao pai (que já é 1.125em base) */
+        }
+
+         /* Margem inferior para parágrafo na primeira slide */
+         .reveal section:first-child p {
+             margin-bottom: 20px; /* Aumenta espaço */
+         }
+           .reveal section:first-child p:last-child {
+             margin-top: 40px; /* Mais espaço antes do contato */
+         }
+
+
+    </style>
+</head>
+<body>
+    <canvas id="synapseCanvas"></canvas>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <section>
+                <h2>Atuação do Biomédico no Diagnóstico por Imagem</h2>
+                <h4>Ênfase em Ressonância Magnética</h4>
+                <p><strong>Adriano de Oliveira Silva</strong><br>
+                Biomédico Especialista em Imaginologia, Biotecnologia e Análises Clínicas</p>
+            </section>
+
+            <section>
+                <h3>A Era da Imagem na Medicina</h3>
+                <ul>
+                    <li>O diagnóstico por imagem revolucionou a prática médica.</li>
+                    <li>Ferramenta essencial para identificação e acompanhamento de patologias.</li>
+                    <li>Diversidade de métodos: Raios-X, TC, US, RM, Medicina Nuclear.</li>
+                </ul>
+            </section>
+
+             <section>
+                 <h3>O Papel do Biomédico</h3>
+                 <ul>
+                     <li>Profissional legalmente habilitado para atuar em diversas áreas da imagem.</li>
+                     <li>Responsável técnico e executor de procedimentos.</li>
+                     <li><strong>Habilitação</strong> concedida pelos Conselhos Regionais de Biomedicina (<strong>CRBMs</strong>), sob normatização do Conselho Federal de Biomedicina (<strong>CFBM</strong>).</li>
+                     <li>Elenco 15.1 do CFBM: "Diagnóstico por Imagem".</li>
+                 </ul>
+             </section>
+
+            <section class="topic">
+                 <h2>Ressonância Magnética (RM)</h2> </section>
+
+            <section>
+                <h3>RM: Princípios Fundamentais</h3>
+                <ul>
+                    <li>Interação de prótons (do <strong>Hidrogênio</strong> - o elemento mais abundante no corpo humano, presente principalmente na água <strong>H₂O</strong>) com campos magnéticos fortes.</li>
+                    <li>Aplicação de pulsos de radiofrequência (RF).</li>
+                    <li>Captação do sinal emitido pelos prótons ao retornarem ao equilíbrio.</li>
+                    <li>Não utiliza radiação ionizante (Diferente de RX e TC).</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>O Scanner de RM</h3> <ul>
+                    <li><strong>Imã Principal:</strong> Gera campo magnético estático (B0).</li>
+                    <li><strong>Bobinas de Gradiente:</strong> Criam campos magnéticos variáveis para localizar o sinal.</li>
+                    <li><strong>Bobina de RF (Transmissão/Recepção):</strong> Emite pulsos e capta o sinal.</li>
+                    <li><strong>Computador/Software:</strong> Processa os sinais e reconstrói a imagem.</li>
+                </ul>
+            </section>
+
+             <section class="topic">
+                 <h2>Segurança em RM</h2> </section>
+
+             <section>
+                 <h3>Gerenciamento de Riscos</h3> <ul>
+                     <li><strong>Campo Magnético:</strong> Perigo de projéteis ferromagnéticos ("Efeito Míssil"). Triagem rigorosa!</li>
+                     <li><strong>Radiofrequência:</strong> Risco de queimaduras de RF.</li>
+                     <li><strong>Campo Gradiente:</strong> Ruído acústico elevado. Risco de estimulação nervosa periférica.</li>
+                     <li><strong>Quenching:</strong> Liberação súbita de gases criogênicos.</li>
+                 </ul>
+             </section>
+
+             <section>
+                 <h3>Protocolo de Triagem</h3> <ul>
+                     <li>Questionários detalhados sobre implantes, próteses, histórico cirúrgico.</li>
+                     <li>Verificação de itens de metal no paciente e acompanhantes.</li>
+                     <li>Orientação sobre o procedimento, ruído e sensação térmica.</li>
+                     <li>Manejo de claustrofobia e ansiedade.</li>
+                 </ul>
+             </section>
+
+             <section class="topic">
+                 <h2>Atribuições do Biomédico em RM</h2> </section>
+
+            <section>
+                <h3>Preparo e Posicionamento do Paciente</h3> <ul>
+                    <li>Identificação correta do paciente e procedimento.</li>
+                    <li>Orientação pré-exame clara.</li>
+                    <li>Posicionamento anatômico preciso no scanner.</li>
+                    <li>Seleção e posicionamento adequado das bobinas de RF.</li>
+                    <li>Garantia de conforto e segurança durante o exame.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Planejamento e Execução da Aquisição</h3> <ul>
+                    <li>Análise da requisição médica e histórico do paciente.</li>
+                    <li>Definição dos planos de corte (axial, coronal, sagital, oblíquos).</li>
+                    <li>Seleção das sequências de pulso apropriadas para a indicação clínica (T1, T2, FLAIR, DWI, etc.).</li>
+                    <li>Ajuste de parâmetros técnicos (FOV, Matriz, TR, TE, Ângulo Flip, Número de excitações).</li>
+                    <li>Monitoramento do exame em tempo real.</li>
+                </ul>
+            </section>
+
+             <section>
+                 <h3>Uso de Meio de Contraste (Gadolíneo)</h3> <ul>
+                     <li>Administração intravenosa (em casos indicados).</li>
+                     <li>Conhecimento das indicações, contraindicações e efeitos adversos.</li>
+                     <li>Preparo do paciente e acesso venoso.</li>
+                     <li>Protocolos específicos pós-contraste.</li>
+                     <li>Monitoramento de reações adversas.</li>
+                     <li><strong>Avaliação da função renal é crucial</strong> antes do uso de contraste (Gadolíneo).</li>
+                     <li>Importância do cálculo do Clearance de Creatinina (estimativa da Taxa de Filtração Glomerular - <strong>TFG</strong>).</li>
+                     <li>Uma ferramenta online gratuita pode ser útil para este cálculo rápido.</li>
+                 </ul>
+             </section>
+
+            <section>
+                <h3>Pós-Processamento de Imagens</h3> <ul>
+                    <li>Reconstruções multiplanares (MPR) em diferentes ângulos.</li>
+                    <li>Reconstruções 3D (MIP, VRT, SSD).</li>
+                    <li>Análise quantitativa (volume, perfusão, espectroscopia - em software dedicado).</li>
+                    <li>Preparação das imagens para envio ao sistema PACS e visualização médica.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Quantificação Férrica (Hemocromatose)</h3> <ul>
+                    <li>Avaliação não invasiva da concentração de ferro em órgãos (ex: fígado, coração).</li>
+                    <li>Técnica utilizada no diagnóstico e acompanhamento da Hemocromatose.</li>
+                    <li>Baseada na degradação do sinal de RM pelo ferro (T2*).</li>
+                    <li>Resultados expressos em mg/g ou outros índices.</li>
+                </ul>
+            </section>
+
+            <section>
+                <h3>Exames de RM por Área</h3> <ul>
+                    <li><strong>Neuro:</strong> Crânio, Coluna (C, T, L, Sacro), AngioRM.</li>
+                    <li><strong>Musculoesquelético:</strong> Joelho, Ombro, Tornozelo, Quadril, Mão, Pé.</li>
+                    <li><strong>Abdômen e Pelve:</strong> Fígado, Pâncreas, Rins, Adrenais, Pelve Feminina/Masculina.</li>
+                    <li><strong>Mama:</strong> Protocolo Dinâmico Pós-Contraste, Avaliação de Próteses.</li>
+                    <li><strong>Próstata:</strong> Protocolo Multi-Paramétrico (mpRM).</li>
+                    <li><strong>Cardíaca:</strong> Morfologia, Função, Viabilidade Miocárdica, Perfusão.</li>
+                    <li><strong>Vascular:</strong> AngioRM (Vasos Cerebrais, Renais, Periféricos).</li>
+                </ul>
+            </section>
+
+             <section>
+                 <h3>Espectroscopia por RM (RMH)</h3> <ul>
+                     <li>Vai além da imagem anatômica, avaliando a composição química dos tecidos.</li>
+                     <li>Identifica e quantifica <strong>metabólitos</strong> específicos em determinada região de interesse (voxel).</li>
+                     <li>Análise dos "picos" no espectro para determinar a concentração de substâncias.</li>
+                     <li>Útil em lesões cerebrais (tumores, AVC), doenças musculares, espectroscopia hepática.</li>
+                     <li>Exemplos de Analítos:
+                         <ul>
+                             <li><strong>Colina (Cho):</strong> Marcador de turnover de membrana celular (elevado em tumores).</li>
+                             <li><strong>Creatina (Cr):</strong> Marcador de metabolismo energético (relativamente estável).</li>
+                             <li><strong>N-Acetilaspartato (NAA):</strong> Marcador de viabilidade neuronal (reduzido em lesões neuronais).</li>
+                             <li><strong>Lactato (Lac):</strong> Indicador de metabolismo anaeróbico (elevado em hipóxia, necrose).</li>
+                         </ul>
+                     </li>
+                 </ul>
+             </section>
+
+
+             <section>
+                 <h3>Controle de Qualidade e Manutenção</h3> <ul>
+                     <li>Monitoramento da qualidade das imagens adquiridas.</li>
+                     <li>Identificação e solução de problemas técnicos menores.</li>
+                     <li>Participação em testes de controle de qualidade periódicos do equipamento.</li>
+                     <li>Comunicação com a engenharia clínica e representantes do fabricante (Siemens, GE, Philips, etc.).</li>
+                 </ul>
+             </section>
+
+             <section>
+                 <h3>Atuação Multidisciplinar</h3> <ul>
+                     <li>Colaboração próxima com Radiologistas para otimização de protocolos e resolução de dúvidas.</li>
+                     <li>Comunicação com médicos solicitantes.</li>
+                     <li>Interação com enfermeiros, técnicos de enfermagem e pessoal administrativo.</li>
+                     <li>Trabalho em equipe para o fluxo eficiente do serviço.</li>
+                 </ul>
+             </section>
+
+             <section>
+                 <h3>Aspectos Éticos e Legais</h3> <ul>
+                     <li>Atuação dentro dos limites de sua habilitação e legislação vigente (CFBM).</li>
+                     <li>Manter a confidencialidade das informações do paciente.</li>
+                     <li>Humanização do atendimento e comunicação clara.</li>
+                     <li>Responsabilidade pela qualidade técnica do exame adquirido.</li>
+                 </ul>
+             </section>
+
+
+             <section>
+                 <h3>Biomédico: Essencial para o Diagnóstico por Imagem de Qualidade</h3> <ul>
+                     <li>Conhecimento técnico aprofundado da física e do equipamento.</li>
+                     <li>Habilidade em otimizar protocolos para diferentes indicações.</li>
+                     <li>Garantia de segurança e conforto para o paciente.</li>
+                     <li>Profissional chave na obtenção de imagens que levarão ao diagnóstico correto.</li>
+                 </ul>
+             </section>
+
+            <section>
+                <h2>Reflexão e Agradecimento</h2> <p>Gostaria de expressar minha profunda gratidão pela oportunidade de compartilhar um pouco do fascinante universo do Diagnóstico por Imagem.</p>
+
+                <blockquote style="margin: 35px auto; font-style: italic; color: #00ccff; max-width: 85%; text-align: center; border-left: none; padding: 0; background-color: transparent;">
+                    <p style="font-size: 1.3em; color: #00ccff; margin-bottom: 8px;">"Aqui continuamos curiosos, e sempre seguimos em frente."</p>
+                </blockquote>
+                <span class="quote-attribution">― Walt Disney</span>
+
+
+                <p class="final-contact"><strong>Contato:</strong> Adriano de Oliveira Silva</p>
+
+                <p class="final-note">Desenvolvido e customizado por Adriano de Oliveira Silva (com Reveal.js e animação de fundo customizada).</p>
+            </section>
+
+
+        </div>
+    </div>
+
+    <script>
+        // --- Código da Malha Sináptica 2D ---
+        class SynapticMesh {
+            constructor(canvasId, options = {}) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.nodes = [];
+                this.options = {
+                    nodeCount: 200, // Mantido
+                    connectDistance: 180, // Mantido
+                    hueStart: 200, // Azul-Ciano
+                    hueEnd: 260, // Azul/Roxo
+                    baseOpacity: 0.8, // Mantido
+                };
+
+                this.init();
+            }
+
+            init() {
+                this.resizeCanvas();
+                this.createNodes();
+                this.animate();
+                window.addEventListener('resize', () => {
+                    this.resizeCanvas();
+                    this.createNodes();
+                });
+            }
+
+            resizeCanvas() {
+                const dpr = window.devicePixelRatio || 1;
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+
+                this.canvas.width = width * dpr;
+                this.canvas.height = height * dpr;
+                this.canvas.style.width = `${width}px`;
+                this.canvas.style.height = `${height}px`;
+
+                this.ctx.scale(dpr, dpr);
+            }
+
+            createNodes() {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                const speedMultiplier = 1.8; // Aumentado para 1.8 (mais rápido)
+
+                this.nodes = Array.from({ length: this.options.nodeCount }, () => ({
+                    x: Math.random() * width,
+                    y: Math.random() * height,
+                    vx: (Math.random() - 0.5) * speedMultiplier, // Usa o novo speedMultiplier
+                    vy: (Math.random() - 0.5) * speedMultiplier, // Usa o novo speedMultiplier
+                    r: Math.random() * 2 + 0.5
+                }));
+            }
+
+            updateNodes() {
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+                this.nodes.forEach(node => {
+                    node.x += node.vx;
+                    node.y += node.vy;
+
+                    if (node.x < 0 || node.x > width) {
+                        node.vx *= -0.9;
+                        node.x = Math.max(0, Math.min(node.x, width));
+                    }
+                    if (node.y < 0 || node.y > height) {
+                        node.vy *= -0.9;
+                        node.y = Math.max(0, Math.min(node.y, height));
+                    }
+                });
+            }
+
+             getNodeColor(x) {
+                 const hueStart = this.options.hueStart;
+                 const hueEnd = this.options.hueEnd;
+                 const hue = hueStart + (x / window.innerWidth) * (hueEnd - hueStart);
+                 return `hsla(${hue}, 80%, 70%, `;
+             }
+
+            drawConnections() {
+                const { connectDistance } = this.options;
+                const ctx = this.ctx;
+
+                for (let i = 0; i < this.nodes.length; i++) {
+                    for (let j = i + 1; j < this.nodes.length; j++) {
+                        const dx = this.nodes[i].x - this.nodes[j].x;
+                        const dy = this.nodes[i].y - this.nodes[j].y;
+                        const distSq = dx * dx + dy * dy;
+
+                        if (distSq < connectDistance * connectDistance) {
+                            const dist = Math.sqrt(distSq);
+                            const opacity = (1 - dist / connectDistance) * 0.4;
+                             const midX = (this.nodes[i].x + this.nodes[j].x) / 2;
+                             const colorBase = this.getNodeColor(midX);
+
+                            ctx.beginPath();
+                            ctx.moveTo(this.nodes[i].x, this.nodes[i].y);
+                            ctx.lineTo(this.nodes[j].x, this.nodes[j].y);
+                            ctx.strokeStyle = colorBase + opacity + ')';
+                            ctx.lineWidth = 0.8;
+                            ctx.stroke();
+                        }
+                    }
+                }
+            }
+
+            drawNodes() {
+                const ctx = this.ctx;
+
+                this.nodes.forEach(node => {
+                     const colorBase = this.getNodeColor(node.x);
+
+                    ctx.beginPath();
+                    ctx.arc(node.x, node.y, node.r, 0, Math.PI * 2);
+                    ctx.fillStyle = colorBase + this.options.baseOpacity + ')';
+
+                    ctx.fill();
+                });
+            }
+
+            animate() {
+                const ctx = this.ctx;
+                const width = window.innerWidth;
+                const height = window.innerHeight;
+
+                ctx.clearRect(0, 0, width, height);
+
+                this.updateNodes();
+                this.drawConnections();
+                this.drawNodes();
+
+                requestAnimationFrame(this.animate.bind(this));
+            }
+        }
+
+        // --- Inicializa a Malha Sináptica no Fundo ---
+        const synapseMesh = new SynapticMesh('synapseCanvas'); // Corrigido para usar 'synapseCanvas'
+
+
+    </script>
+
+    <script src="https://cdn.jsdelivr.net/npm/reveal.js/dist/reveal.js"></script>
+    <script>
+        // --- Inicializa a Apresentação Reveal.js ---
+        Reveal.initialize({
+            hash: true, // Permite usar #/slide-number na URL
+            slideNumber: true, // Mostra o número da slide
+            transition: 'fade', // Transição entre slides (ex: 'slide', 'fade', 'convex', 'concave', 'zoom')
+            backgroundTransition: 'fade', // Transição para backgrounds (ex: 'fade', 'none')
+
+            // Mais opções de configuração aqui: https://revealjs.com/config/
+        });
+    </script>
+</body>
+</html>
